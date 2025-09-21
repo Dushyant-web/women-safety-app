@@ -1,5 +1,5 @@
 {
   "appId": "com.example.womensafety",
   "appName": "womensafety",
-  "webDir": "frontend"
+  "webDir": "frontend/public"
 }

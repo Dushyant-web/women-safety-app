@@ -11,6 +11,12 @@ let serviceAccount;
 try {
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+
+    // 🔥 Fix: convert \\n to real newlines
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
+
     console.log("✅ Using service account from ENV");
   } else {
     serviceAccount = require('./serviceAccountKey.json');
@@ -37,13 +43,11 @@ const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost",
-  "http://localhost:5500",
+  "http://localhost:5000",
   "http://127.0.0.1:5000",
   "http://localhost:5500",
-  "https://women-safety-app-78gl.onrender.com" ,// Render backend
-  "https://women-saftey-a3bac.web.app", // Firebase hosting
-
+  "https://women-saftey-a3bac.web.app", // Firebase hosting frontend
+  "https://women-safety-app-78gl.onrender.com" // Render backend
 ];
 
 app.use(cors({
