@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Women Safety</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Text&display=swap');
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=3840&q=80') no-repeat center center fixed;
+            /* A dark minimalist Mac-style background image, 4K resolution */
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+        .frosted-container {
+            background: rgba(28, 28, 30, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px 50px;
+            width: 400px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-weight: 600;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="email"],
+        input[type="password"] {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            transition: background 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            background: rgba(255,255,255,0.2);
+        }
+        button {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 0;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+            user-select: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background: rgba(255,255,255,0.35);
+            color: #000;
+        }
+        button.google {
+            background: rgba(66, 133, 244, 0.85);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        button.google:hover {
+            background: rgba(66, 133, 244, 1);
+            color: #fff;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.875rem;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .frosted-container {
+                width: 90%;
+                max-width: 400px;
+                padding: 30px 20px;
+                border-radius: 16px;
+            }
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            input[type="email"],
+            input[type="password"] {
+                padding: 12px 14px;
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            button {
+                padding: 12px 0;
+                font-size: 0.9rem;
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="frosted-container" role="main" aria-label="Login form">
+        <h1>Sign In</h1>
+        <form id="loginForm" novalidate>
+            <input type="email" id="email" name="email" placeholder="Email" autocomplete="email" required aria-required="true" aria-label="Email" />
+            <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required aria-required="true" aria-label="Password" />
+            <p class="error-message" id="errorMessage" role="alert"></p>
+            <div class="btn-group">
+                <button type="submit" id="loginBtn" aria-label="Login with Email and Password">Log In</button>
+                <button type="button" id="signupBtn" aria-label="Sign up with Email and Password">Sign Up</button>
+                <button type="button" id="googleBtn" class="google" aria-label="Sign up with Google">Sign Up with Google</button>
+            </div>
+        </form>
+    </main>
+
+    <script type="module">
+        import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle } from './login.js';
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const googleBtn = document.getElementById('googleBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
+
+        function validateInputs() {
+            if (!emailInput.value.trim()) {
+                errorMessage.textContent = 'Email is required.';
+                errorMessage.style.display = 'block';
+                emailInput.focus();
+                return false;
+            }
+            if (!passwordInput.value.trim()) {
+                errorMessage.textContent = 'Password is required.';
+                errorMessage.style.display = 'block';
+                passwordInput.focus();
+                return false;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+            return true;
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validateInputs()) return;
+            try {
+                await loginWithEmailPassword(emailInput.value.trim(), passwordInput.value.trim());
+            } catch (error) {
+                errorMessage.textContent = error.message || 'Login failed.';
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        signupBtn.addEventListener('click', async () => {
+            if (!validateInputs()) return;
+            try {
+                await signupWithEmailPassword(emailInput.value.trim(), passwordInput.value.trim());
+            } catch (error) {
+                errorMessage.textContent = error.message || 'Signup failed.';
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        googleBtn.addEventListener('click', async () => {
+            try {
+                await loginWithGoogle();
+            } catch (error) {
+                errorMessage.textContent = error.message || 'Google sign-in failed.';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

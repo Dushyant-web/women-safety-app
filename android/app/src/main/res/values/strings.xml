@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">womensafety</string>
+    <string name="title_activity_main">womensafety</string>
+    <string name="package_name">com.example.womensafety</string>
+    <string name="custom_url_scheme">com.example.womensafety</string>
+</resources>

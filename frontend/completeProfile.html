@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Complete Profile</title>
+  <style>
+    @font-face {
+      font-family: 'SF Pro Text';
+      src: local('SF Pro Text'), local('San Francisco'), local('Helvetica Neue'), local('Helvetica'), local('Arial'), sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+    body {
+      margin: 0;
+      padding: 3rem;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f0f5, #d9d9e6);
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1c1c1e;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    form {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: saturate(180%) blur(25px);
+      -webkit-backdrop-filter: saturate(180%) blur(25px);
+      border-radius: 24px;
+      box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+      padding: 3rem 3.5rem;
+      width: 100%;
+      max-width: 460px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      font-size: 2.25rem;
+      text-align: center;
+      color: #2c2c2e;
+      letter-spacing: 0.03em;
+      user-select: none;
+      width: 100%;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      color: #3a3a3c;
+      font-size: 1.05rem;
+      user-select: none;
+      width: 100%;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border: none;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 400;
+      background: rgba(255, 255, 255, 0.3);
+      color: #1c1c1e;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      outline-offset: 2px;
+      box-sizing: border-box;
+    }
+    input[type="text"]::placeholder,
+    input[type="tel"]::placeholder {
+      color: rgba(28, 28, 30, 0.5);
+      font-weight: 400;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.25);
+      outline: none;
+    }
+    #contactsList {
+      max-height: 220px;
+      overflow-y: auto;
+      margin-bottom: 2rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.07);
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      color: #2c2c2e;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .contact-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid rgba(60, 60, 67, 0.12);
+      font-size: 1rem;
+      color: #2c2c2e;
+      font-weight: 400;
+      user-select: text;
+    }
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+    .contact-info {
+      flex-grow: 1;
+      overflow-wrap: break-word;
+      padding-right: 0.75rem;
+    }
+    #addContactSection {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #addContactSection input {
+      flex: 1;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 400;
+      background: rgba(255, 255, 255, 0.3);
+      color: #1c1c1e;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      outline-offset: 2px;
+      box-sizing: border-box;
+    }
+    #addContactSection input::placeholder {
+      color: rgba(28, 28, 30, 0.5);
+      font-weight: 400;
+    }
+    #addContactSection input:focus {
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.25);
+      outline: none;
+    }
+    #addContactBtn {
+      background: linear-gradient(135deg, #007aff, #004a99);
+      color: white;
+      border: none;
+      padding: 0 1.75rem;
+      border-radius: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      font-size: 1rem;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      box-shadow: 0 6px 12px rgba(0, 122, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    #addContactBtn:hover {
+      background: linear-gradient(135deg, #3399ff, #0066cc);
+      box-shadow: 0 9px 20px rgba(0, 102, 204, 0.6);
+    }
+    button[type="submit"] {
+      width: 100%;
+      background: linear-gradient(135deg, #007aff, #004a99);
+      color: white;
+      border: none;
+      padding: 0.95rem 0;
+      border-radius: 20px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      box-shadow: 0 8px 16px rgba(0, 122, 255, 0.5);
+      letter-spacing: 0.03em;
+    }
+    button[type="submit"]:hover {
+      background: linear-gradient(135deg, #3399ff, #0066cc);
+      box-shadow: 0 12px 24px rgba(0, 102, 204, 0.7);
+    }
+    button {
+      user-select: none;
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "San Francisco", Helvetica, Arial, sans-serif;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+      form {
+        padding: 1.5rem 1.5rem;
+        max-width: 90%;
+        width: 90%;
+      }
+      h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+      }
+      label {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+      }
+      input[type="text"], input[type="tel"] {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      #contactsList {
+        max-height: 180px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      .contact-item {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.4rem;
+      }
+      #addContactSection {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      #addContactSection input {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+      #addContactBtn {
+        padding: 0.6rem 0;
+        font-size: 1rem;
+        width: 100%;
+        border-radius: 16px;
+      }
+      button[type="submit"] {
+        font-size: 1.1rem;
+        padding: 0.8rem 0;
+        border-radius: 16px;
+      }
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <form id="profileForm" autocomplete="off" novalidate>
+    <h2>Complete Profile</h2>
+    <label for="userName">Your Name</label>
+    <input type="text" id="userName" name="userName" placeholder="Your Name" required autocomplete="off" />
+
+    <label for="userPhone">Your Phone</label>
+    <input type="tel" id="userPhone" name="userPhone" placeholder="Your Phone" required autocomplete="off" />
+
+    <div id="contactsList"></div>
+
+    <div id="addContactSection">
+      <input type="text" id="newContactName" placeholder="Contact Name" autocomplete="off" />
+      <input type="tel" id="newContactPhone" placeholder="Contact Phone" autocomplete="off" />
+      <button type="button" id="addContactBtn">Add</button>
+    </div>
+
+    <button type="submit">Save and Continue</button>
+  </form>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCvoJdOzp9v8aWdnWhGpoBrB_ZOBh-L648",
+      authDomain: "women-saftey-a3bac.firebaseapp.com",
+      projectId: "women-saftey-a3bac",
+      storageBucket: "women-saftey-a3bac.firebasestorage.app",
+      messagingSenderId: "40368489597",
+      appId: "1:40368489597:web:cba8693d99900ea5461d1",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById('profileForm');
+    const userNameInput = form.userName;
+    const userPhoneInput = form.userPhone;
+    const contactsList = document.getElementById('contactsList');
+    const newContactNameInput = document.getElementById('newContactName');
+    const newContactPhoneInput = document.getElementById('newContactPhone');
+    const addContactBtn = document.getElementById('addContactBtn');
+
+    let currentUserId = null;
+    let currentContacts = [];
+
+    function validatePhone(phone) {
+      const phoneRegex = /^\+?[0-9]{7,15}$/;
+      return phoneRegex.test(phone);
+    }
+
+    function renderContacts() {
+      contactsList.innerHTML = '';
+      currentContacts.forEach((contact, index) => {
+        const div = document.createElement('div');
+        div.className = 'contact-item';
+
+        const info = document.createElement('div');
+        info.className = 'contact-info';
+        info.textContent = `${contact.name} - ${contact.phone}`;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          currentContacts.splice(index, 1);
+          renderContacts();
+        });
+
+        div.appendChild(info);
+        div.appendChild(removeBtn);
+        contactsList.appendChild(div);
+      });
+    }
+
+    addContactBtn.addEventListener('click', () => {
+      const name = newContactNameInput.value.trim();
+      const phone = newContactPhoneInput.value.trim();
+
+      if (!name || !phone) {
+        alert('Please enter both contact name and phone.');
+        return;
+      }
+      if (!validatePhone(phone)) {
+        alert('Please enter a valid phone number for the contact.');
+        return;
+      }
+
+      currentContacts.push({ name, phone });
+      renderContacts();
+      newContactNameInput.value = '';
+      newContactPhoneInput.value = '';
+      newContactNameInput.focus();
+    });
+
+    function loadUserProfile(uid) {
+      db.collection('users').doc(uid).get()
+        .then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            if (data) {
+              if (data.name) userNameInput.value = data.name;
+              if (data.phone) userPhoneInput.value = data.phone;
+              if (Array.isArray(data.contacts)) {
+                currentContacts = data.contacts;
+              }
+            }
+          }
+          renderContacts();
+        })
+        .catch(() => {
+          renderContacts();
+        });
+    }
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUserId = user.uid;
+      loadUserProfile(currentUserId);
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const name = userNameInput.value.trim();
+      const phone = userPhoneInput.value.trim();
+
+      if (!name) {
+        alert('Please enter your name.');
+        return;
+      }
+      if (!phone || !validatePhone(phone)) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+
+      for (const c of currentContacts) {
+        if (!c.name || !c.phone || !validatePhone(c.phone)) {
+          alert('Please ensure all contacts have valid names and phone numbers.');
+          return;
+        }
+      }
+
+      if (!currentUserId) {
+        alert('User not authenticated. Please login again.');
+        return;
+      }
+
+      db.collection('users').doc(currentUserId).set({
+        name,
+        phone,
+        contacts: currentContacts
+      }, { merge: true })
+      .then(() => {
+        window.location.href = 'index.html';
+      })
+      .catch(() => {
+        alert('Failed to save profile. Please try again.');
+      });
+    });
+  </script>
+</body>
+</html>

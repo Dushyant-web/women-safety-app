@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit User - Women Safety</title>
+  <!-- Apple style dark UI fonts -->
+  <link href="https://fonts.googleapis.com/css?family=SF+Pro+Display:400,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background: #18191a;
+      --foreground: #232526;
+      --input-bg: #282a2d;
+      --input-border: #35363a;
+      --primary: #0a84ff;
+      --primary-hover: #0060df;
+      --text: #f2f2f7;
+      --label: #b0b3b8;
+      --danger: #ff453a;
+      --danger-hover: #d70015;
+      --border-radius: 14px;
+      --transition: 0.18s cubic-bezier(.4,0,.2,1);
+      --shadow: 0 2px 12px rgba(0,0,0,0.25);
+      --sidebar-width: 260px;
+      --toggle-btn-width: 44px;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'SF Pro Display', 'San Francisco', Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: var(--sidebar-width);
+      background: var(--foreground);
+      box-shadow: var(--shadow);
+      border-top-right-radius: 22px;
+      border-bottom-right-radius: 22px;
+      padding: 1.5rem 1.25rem 1.5rem 1.25rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      transform: translateX(calc(-1 * var(--sidebar-width)));
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .sidebar .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.1rem;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.9rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background var(--transition);
+      font-weight: 600;
+      user-select: none;
+    }
+    .sidebar .nav-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    /* Toggle button styles */
+    .sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      width: var(--toggle-btn-width);
+      height: var(--toggle-btn-width);
+      background: var(--foreground);
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      z-index: 1100;
+      transition: background var(--transition);
+    }
+    .sidebar-toggle:hover {
+      background: var(--primary);
+    }
+    .sidebar-toggle span {
+      font-size: 24px;
+      line-height: 1;
+      color: var(--text);
+      user-select: none;
+    }
+    /* Main content container */
+    .container {
+      background: var(--foreground);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      min-width: 350px;
+      max-width: 410px;
+      width: 100%;
+      margin: 1rem auto;
+      margin-left: calc(var(--toggle-btn-width) + 1rem);
+      transition: margin-left 0.3s ease;
+      box-sizing: border-box;
+    }
+    .container.sidebar-open {
+      margin-left: calc(var(--sidebar-width) + 1rem);
+    }
+    h2 {
+      margin-bottom: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    label {
+      color: var(--label);
+      font-size: 0.97rem;
+      margin-bottom: 2px;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="email"], input[type="tel"] {
+      padding: 0.7rem 1rem;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: var(--border-radius);
+      font-size: 1.08rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      box-shadow: none;
+    }
+    input[readonly] {
+      color: #aaa;
+      background: #232526;
+      opacity: 0.85;
+      cursor: not-allowed;
+    }
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px #0a84ff33;
+    }
+    .contacts-section {
+      margin-top: 0.8rem;
+      background: #222325;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.133);
+    }
+    .contacts-header {
+      display: flex;
+      align-items: center;  
+      justify-content: space-between;
+      margin-bottom: 0.7rem;
+    }
+    .contacts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .contact-item {
+        display: flex;
+        flex-wrap: wrap; /* CRUCIAL CHANGE: Allows items to wrap to a new line */
+        align-items: center;
+        gap: 0.6rem;
+        background: var(--input-bg);
+        border-radius: 10px;
+        Padding: 0.5rem 0.7rem;
+        position: relative;
+    }
+    .contact-item input[type="text"], .contact-item input[type="tel"] {
+        flex: 1 1 auto; /* CRUCIAL CHANGE: Makes inputs flexible, allowing them to shrink */
+        margin-right: 0.3rem;
+        background: #232526;
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .remove-contact-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 1rem;
+      border-radius: 50%;
+      padding: 0.15rem 0.3rem;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      margin-left: 0.1rem;
+    }
+    .remove-contact-btn:hover {
+      background: var(--danger-hover);
+      color: #fff;
+    }
+    .add-contact-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1.1rem;
+      font-size: 1.03rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition);
+      box-shadow: 0 1px 3px #0a84ff22;
+      margin-top: 0.5rem;
+    }
+    .add-contact-btn:hover {
+      background: var(--primary-hover);
+    }
+    .action-btn {
+      margin-top: 1.4rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 0.8rem 0;
+      font-size: 1.18rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #0a84ff22;
+      transition: background var(--transition), box-shadow var(--transition);
+      letter-spacing: 0.5px;
+    }
+    .action-btn:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 4px 18px #0a84ff33;
+    }
+    .message {
+      margin-top: 0.7rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 9px;
+      font-size: 1.04rem;
+      text-align: center;
+      background: #232526;
+      color: #ffd60a;
+      display: none;
+    }
+    .message.success {
+      background: #1e2c1e;
+      color: #32d74b;
+      display: block;
+    }
+    .message.error {
+      background: #2c1e1e;
+      color: #ff453a;
+      display: block;
+    }
+    @media (max-width: 520px) {
+      .container {
+        min-width: unset; /* Remove min-width to allow shrinking */
+        max-width: unset; /* Remove max-width for full flexibility */
+        width: 95%; /* Use a flexible width */
+        padding: 1.2rem 1rem; /* Reduce padding for more space */
+        margin: 0.5rem auto;
+        margin-left: calc(var(--toggle-btn-width) + 1rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar">
+    <button class="nav-btn" id="homeBtn" style="display:none;">🏠 Home</button>
+    <button class="nav-btn" id="editDbBtn">✏️ Edit Database</button>
+  </nav>
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+    <span>⚙️</span>
+  </button>
+  <div class="container" id="mainContainer">
+    <h2>Edit User</h2>
+    <form id="editUserForm" autocomplete="off">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" readonly />
+      </div>
+      <div class="contacts-section">
+        <div class="contacts-header">
+          <span style="font-weight:600; font-size:1.05rem;">Emergency Contacts</span>
+        </div>
+        <div id="contactsList" class="contacts-list">
+          <!-- Contact items get injected here -->
+        </div>
+        <button type="button" class="add-contact-btn" id="addContactBtn">+ Add Contact</button>
+      </div>
+      <button type="submit" class="action-btn">Save Changes</button>
+      <div id="message" class="message"></div>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="editDatabase.js"></script>
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const mainContainer = document.getElementById('mainContainer');
+    const homeBtn = document.getElementById('homeBtn');
+    const editDbBtn = document.getElementById('editDbBtn');
+
+    // Sidebar is initially hidden (collapsed)
+    // Toggle button opens/closes the sidebar
+    toggleBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        mainContainer.classList.remove('sidebar-open');
+        homeBtn.style.display = 'none';
+      } else {
+        sidebar.classList.add('open');
+        mainContainer.classList.add('sidebar-open');
+        homeBtn.style.display = 'block';
+      }
+    });
+
+    // Home button navigates to index.html only when sidebar is open
+    homeBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        window.location.href = 'index.html';
+      }
+    });
+
+    // When Edit Database button is clicked, close the sidebar if it is open
+    editDbBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        mainContainer.classList.remove('sidebar-open');
+        homeBtn.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
