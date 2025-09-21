@@ -1,0 +1,12 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Env
+.env
+backend/serviceAccountKey.json
+
+# Build
+dist/
+build/

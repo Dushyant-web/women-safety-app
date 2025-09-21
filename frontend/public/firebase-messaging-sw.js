@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCvoJdOzp9v8aWdnWhGpoBrB_ZOBh-L648",
   authDomain: "women-saftey-a3bac.firebaseapp.com",
   projectId: "women-saftey-a3bac",
-  storageBucket: "women-saftey-a3bac.firebasestorage.app",
+  storageBucket: "women-saftey-a3bac.appspot.com",
   messagingSenderId: "40368489597",
   appId: "1:40368489597:web:cba8693d99900ea5461d14"
 };

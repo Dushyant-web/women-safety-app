@@ -20,24 +20,36 @@ const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_A
 const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
 
 const app = express();
+
+// ✅ FIXED CORS CONFIG
+const allowedOrigins = [
+  "http://localhost:5000",
+  "http://127.0.0.1:5000",
+  "http://localhost:5500",
+  "https://women-saftey-a3bac.web.app" // your Firebase hosting domain
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("❌ CORS blocked for origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(bodyParser.json({ limit: '1mb' }));
 
 // Helper function to enforce E.164 format for phone numbers
 function formatToE164(phone) {
-  // If phone already starts with + and digits, assume E.164
   if (/^\+\d{10,15}$/.test(phone)) {
     return phone;
   }
-  // Remove all non-digit characters
   let digits = phone.replace(/\D/g, '');
-  // If phone starts with country code (e.g. 1 for US), prepend +
-  // Otherwise, assume default country code (e.g. 1) - this is a heuristic; ideally you should know the country code.
-  // For safety, just prepend + and digits
   return '+' + digits;
 }
 
@@ -76,7 +88,6 @@ app.post('/alert', async (req, res) => {
   let pushResults = { successCount: 0, failureCount: 0, responses: [] };
   let alertId = null;
   try {
-    // 1. Create alert in DB
     alertId = uuidv4();
     const alertData = {
       alertId,
@@ -89,7 +100,6 @@ app.post('/alert', async (req, res) => {
     await db.collection('alerts').doc(alertId).set(alertData);
     console.log(`[Alert] Created alert ${alertId} for user ${userId}`);
 
-    // 2. Fetch contacts from array stored in Firestore user document
     const userRef = db.collection('users').doc(userId);
     const userDoc = await userRef.get();
     const userContacts = userDoc.exists && Array.isArray(userDoc.data().contacts)
@@ -115,7 +125,6 @@ app.post('/alert', async (req, res) => {
       }
     }
 
-    // 3. Send push notification to all user's tokens
     const tokens = userDoc.exists && Array.isArray(userDoc.data().tokens) ? userDoc.data().tokens : [];
 
     if (tokens.length > 0) {
@@ -127,7 +136,7 @@ app.post('/alert', async (req, res) => {
           },
           webpush: {
             fcmOptions: {
-              link: `https://maps.google.com/?q=${lat},${lon}` // makes notification clickable
+              link: `https://maps.google.com/?q=${lat},${lon}`
             }
           },
           data: {
